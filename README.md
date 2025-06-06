@@ -51,15 +51,15 @@ text
 ai-resume-analyzer/
 
 ├── client/  
-# Frontend React application
+
 ├── server/
-# Node.js backend
+
 ├── python/  
-# Python NLP scripts
+
 ├── README.md 
-# This file
+
 └── ...       
-# Other project files
+
 ⚙️ Installation
 Clone the repository
 
