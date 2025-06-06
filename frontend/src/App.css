@@ -1,0 +1,143 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #e0f7fa, #fce4ec);
+  min-height: 100vh;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.container {
+  padding: 40px;
+  max-width: 900px;
+  margin: auto;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+}
+
+h1 {
+  text-align: center;
+  color: #00796b;
+  margin-bottom: 30px;
+}
+
+.upload-box {
+  background-color: #e1f5fe;
+  border: 2px dashed #0288d1;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.upload-box:hover {
+  background-color: #b3e5fc;
+}
+
+.upload-box input[type="file"] {
+  display: none;
+}
+
+.upload-label {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #0288d1;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.upload-label:hover {
+  background: #01579b;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #00796b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #004d40;
+}
+
+.card {
+  background: #f3f3f3;
+  border-left: 5px solid #4caf50;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  animation: slideIn 0.6s ease;
+}
+
+.card.dark {
+  background: #3d3d3d;
+  border-left: 5px solid #8bc34a;
+  color: #f1f1f1;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: #4caf50;
+}
+
+.feedback {
+  white-space: pre-line;
+  background: #fff3e0;
+  border-left: 5px solid #ff9800;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.feedback.dark {
+  background: #5d4037;
+  border-left: 5px solid #ffb74d;
+  color: #f1f1f1;
+}
+
+.chart-container {
+  margin: 30px 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* PDF Preview */
+.pdf-preview {
+  width: 100%;
+  height: 500px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+  .pdf-preview {
+    height: 300px;
+  }
+  button {
+    width: 100%;
+  }
+}
