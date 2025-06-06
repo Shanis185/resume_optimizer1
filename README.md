@@ -49,17 +49,21 @@ Text similarity analysis
 🏗️ Project Structure
 text
 ai-resume-analyzer/
-├── client/               # Frontend React application
-├── server/               # Node.js backend
-├── python/               # Python NLP scripts
-├── README.md             # This file
-└── ...                   # Other project files
+
+├── client/  
+# Frontend React application
+├── server/
+# Node.js backend
+├── python/  
+# Python NLP scripts
+├── README.md 
+# This file
+└── ...       
+# Other project files
 ⚙️ Installation
 Clone the repository
 
-bash
-git clone https://github.com/yourusername/ai-resume-analyzer.git
-cd ai-resume-analyzer
+
 Install dependencies
 
 bash
