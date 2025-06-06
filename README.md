@@ -21,6 +21,7 @@ Visual representation of your resume's ATS compatibility
 Detailed breakdown of keyword matches by section
 
 🛠️ Tech Stack
+
 Frontend:
 
 React.js
