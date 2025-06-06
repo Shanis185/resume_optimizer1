@@ -2,7 +2,7 @@
 
 A smart tool to optimize your resume for Applicant Tracking Systems
 
-🚀 Features
+# 🚀 Features
 ATS Score Calculation - Get instant feedback on how well your resume matches job descriptions
 
 Keyword Analysis - Identify missing and matched keywords across different sections
@@ -13,16 +13,16 @@ AI-Powered Suggestions - Get actionable recommendations to improve your resume
 
 PDF Parsing - Automatically extracts text from uploaded PDF resumes
 
-📊 Sample Output
+# 📊 Sample Output
 
 Visual representation of your resume's ATS compatibility
 
 
 Detailed breakdown of keyword matches by section
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 
-Frontend:
+## Frontend:
 
 React.js
 
@@ -30,7 +30,7 @@ Chart.js (for data visualization)
 
 Material UI (for clean UI components)
 
-Backend:
+## Backend:
 
 Node.js with Express
 
@@ -38,7 +38,7 @@ Python (for NLP processing)
 
 PyMuPDF (for PDF text extraction)
 
-AI/NLP:
+## AI/NLP:
 
 Hugging Face Transformers
 
@@ -46,7 +46,8 @@ Custom keyword matching algorithms
 
 Text similarity analysis
 
-🏗️ Project Structure
+# 🏗️ Project Structure
+
 text
 ai-resume-analyzer/
 
@@ -60,31 +61,37 @@ ai-resume-analyzer/
 
 └── ...       
 
-⚙️ Installation
+# ⚙️ Installation
 Clone the repository
 
 
 Install dependencies
 
-bash
-# Frontend
+## Frontend
+
 cd client
 npm install
 
-# Backend
+
+## Backend
+
 cd ../server
 npm install
 
-# Python
+
+## Python
+
 cd ../python
 pip install -r requirements.txt
 Run the application
 
-bash
-# In separate terminals:
-cd server && npm start   # Starts backend
-cd client && npm start   # Starts frontend
-📈 How It Works
+
+## In separate terminals:
+
+cd server && npm start  
+cd client && npm start   
+
+ # 📈 How It Works
 Upload your resume PDF
 
 Enter a target job description
