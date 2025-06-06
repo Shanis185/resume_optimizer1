@@ -98,7 +98,7 @@ def analyze_resume(file_path, jd_text=None):
     ats_score = min(100, int((found / max(1, total_possible)) * 80 + 20))  # Avoid division by zero
     
     # Generate AI feedback with proper token handling
-    feedback_prompt = f"Analyze this resume and suggest 3 improvements:\n{text[:2000]}"
+    feedback_prompt = f"Analyze this resume and suggest 3 improvements:\n{text[:300]}"
     try:
         ai_feedback = nlp_feedback(
             feedback_prompt,
