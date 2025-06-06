@@ -141,3 +141,35 @@ button:hover {
     width: 100%;
   }
 }
+
+.job-description-wrapper {
+  margin: 20px 0;
+  text-align: left;
+  width: 100%;
+  max-width: 800px;
+}
+
+.job-description-wrapper label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.job-description-box {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  resize: vertical;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.job-description-box:focus {
+  outline: none;
+  border-color: #42a5f5;
+  box-shadow: 0 0 5px rgba(66, 165, 245, 0.5);
+}

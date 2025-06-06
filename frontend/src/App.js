@@ -21,13 +21,12 @@ function App() {
   const [previewURL, setPreviewURL] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [jobDescription, setJobDescription] = useState("");
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const selected = e.target.files[0];
     if (selected && selected.type === "application/pdf") {
       setFile(selected);
-      // Create a blob URL for PDF preview
       setPreviewURL(URL.createObjectURL(selected));
       setAnalysis(null);
     } else {
@@ -35,10 +34,14 @@ function App() {
     }
   };
 
-  // Send resume to backend for analysis
   const handleAnalyze = async () => {
     if (!file) {
       alert("Please upload a PDF resume first");
+      return;
+    }
+
+    if (!jobDescription.trim()) {
+      alert("Please enter a job description");
       return;
     }
 
@@ -47,6 +50,7 @@ function App() {
 
     const formData = new FormData();
     formData.append("resume", file);
+    formData.append("job_description", jobDescription);
 
     try {
       const { data } = await axios.post("http://localhost:5000/analyze", formData, {
@@ -61,7 +65,6 @@ function App() {
     }
   };
 
-  // Prepare pie chart data for ATS Score
   const pieData = analysis
     ? {
         labels: ["Matched (%)", "Remaining (%)"],
@@ -75,7 +78,6 @@ function App() {
       }
     : null;
 
-  // Prepare bar chart data for keyword counts per section
   const barData = analysis
     ? {
         labels: Object.keys(analysis.sections),
@@ -98,6 +100,15 @@ function App() {
           {file ? file.name : "Click to Select PDF Resume"}
           <input type="file" accept=".pdf" onChange={handleFileChange} />
         </label>
+
+        <textarea
+          placeholder="Paste the Job Description here..."
+          value={jobDescription}
+          onChange={(e) => setJobDescription(e.target.value)}
+          className="job-description-box"
+          rows={6}
+        />
+
         <button onClick={handleAnalyze} disabled={loading}>
           {loading ? "Analyzing…" : "Analyze Resume"}
         </button>
@@ -126,6 +137,14 @@ function App() {
               <Pie data={pieData} />
             </div>
           </div>
+
+          {/* Job Fit Summary */}
+          {analysis.summary_sentence && (
+            <div className="card">
+              <h3>🧾 Job Fit Summary</h3>
+              <p>{analysis.summary_sentence}</p>
+            </div>
+          )}
 
           {/* Keyword Counts Bar Chart */}
           <div className="card">

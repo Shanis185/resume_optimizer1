@@ -5,19 +5,17 @@ import re
 from transformers import pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-# Initialize AI models with proper settings
+# Initialize AI models with safe settings
 nlp_feedback = pipeline(
     "text-generation", 
     model="facebook/blenderbot-400M-distill",
-    device="cpu",  # Explicitly set to CPU
-    truncation=True  # Enable truncation
+    device="cpu"
 )
 
 nlp_comparison = pipeline(
     "text2text-generation", 
-    model="google/flan-t5-small",  # Using smaller model to save memory
-    device="cpu",
-    truncation=True
+    model="google/flan-t5-small",
+    device="cpu"
 )
 
 KEYWORD_DICT = {
@@ -72,7 +70,6 @@ KEYWORD_DICT = {
 }
 
 def extract_text(file_path):
-    """Extract text from PDF"""
     try:
         with fitz.open(file_path) as doc:
             return " ".join(page.get_text() for page in doc)
@@ -81,84 +78,93 @@ def extract_text(file_path):
         return ""
 
 def analyze_resume(file_path, jd_text=None):
-    """Main analysis function"""
     text = extract_text(file_path).lower()
     if not text:
         return {"error": "Failed to extract text from PDF"}
     
-    # Extract keywords
     sections = {
         section: [kw for kw in keywords if re.search(r'\b' + re.escape(kw) + r'\b', text)]
         for section, keywords in KEYWORD_DICT.items()
     }
-    
-    # Calculate ATS score
+
     total_possible = sum(len(keywords) for keywords in KEYWORD_DICT.values())
     found = sum(len(keywords) for keywords in sections.values())
-    ats_score = min(100, int((found / max(1, total_possible)) * 80 + 20))  # Avoid division by zero
-    
-    # Generate AI feedback with proper token handling
-    feedback_prompt = f"Analyze this resume and suggest 3 improvements:\n{text[:300]}"
+    ats_score = min(100, int((found / max(1, total_possible)) * 80 + 20))
+
+    # AI Feedback generation (safe)
+    feedback_prompt = f"Analyze this resume and suggest 3 improvements:\n{text[:2000]}"
     try:
-        ai_feedback = nlp_feedback(
+        ai_raw = nlp_feedback(
             feedback_prompt,
             max_new_tokens=150,
             truncation=True,
             do_sample=True,
             temperature=0.7
-        )[0]['generated_text']
-        ai_feedback = ai_feedback.split("Suggestions:")[-1].strip()
+        )
+        ai_feedback = ai_raw[0].get("generated_text", "").split("Suggestions:")[-1].strip()
+        if not ai_feedback:
+            ai_feedback = ai_raw[0].get("generated_text", "").strip()
     except Exception as e:
         print(f"Error generating feedback: {str(e)}", file=sys.stderr)
-        ai_feedback = "Could not generate feedback"
-    
+        ai_feedback = "⚠️ Could not generate AI feedback due to input size or model limitations."
+
     result = {
         "sections": sections,
         "ats_score": ats_score,
         "ai_feedback": ai_feedback
     }
-    
-    # Add comparison if JD provided
+
     if jd_text:
         jd_text = jd_text.lower()
         jd_keywords = {
             section: [kw for kw in keywords if re.search(r'\b' + re.escape(kw) + r'\b', jd_text)]
             for section, keywords in KEYWORD_DICT.items()
         }
-        
-        match_score = sum(
+
+        matched = sum(
             1 for section in KEYWORD_DICT
             for kw in jd_keywords[section]
             if kw in text
-        ) / max(1, sum(len(kws) for kws in jd_keywords.values())) * 100
-        
+        )
+        total_jd_keywords = sum(len(kws) for kws in jd_keywords.values())
+        match_score = (matched / max(1, total_jd_keywords)) * 100
+
+        if match_score >= 75:
+            summary_sentence = "✅ This resume is a strong fit for the job description."
+        elif match_score >= 40:
+            summary_sentence = "🟡 This resume moderately matches the job description."
+        else:
+            summary_sentence = "🔴 This resume does not effectively match the job description."
+
         try:
             comparison_prompt = f"Compare resume with job description:\nJD: {jd_text[:1000]}\nResume: {text[:1000]}\nKey matches and gaps:"
-            comparison_summary = nlp_comparison(
+            comparison_output = nlp_comparison(
                 comparison_prompt,
                 max_length=400,
                 truncation=True
-            )[0]['generated_text']
+            )
+            comparison_summary = comparison_output[0].get("generated_text", "").strip()
         except Exception as e:
             print(f"Error generating comparison: {str(e)}", file=sys.stderr)
-            comparison_summary = "Could not generate comparison"
-        
+            comparison_summary = "⚠️ Could not generate AI comparison summary."
+
         result.update({
             "match_score": round(match_score, 2),
+            "summary_sentence": summary_sentence,
             "missing_keywords": {
                 section: [kw for kw in jd_keywords[section] if kw not in text]
                 for section in KEYWORD_DICT
             },
             "comparison_summary": comparison_summary
         })
-    
+
     return result
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(json.dumps({"error": "File path required"}, indent=2))
         sys.exit(1)
-        
+
     jd_text = sys.argv[2] if len(sys.argv) > 2 else None
     try:
         result = analyze_resume(sys.argv[1], jd_text)
